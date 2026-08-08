@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beesnote — Your memory, clearly organized</title>
+<meta name="description" content="Beesnote is your external memory: tasks, routines, notes, journal, calendar and the people you care about, in one app. No account, no ads, works offline.">
+<meta name="theme-color" content="#2b1d4e">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Beesnote — Your memory, clearly organized">
+<meta property="og:description" content="Tasks, routines, notes, journal, calendar and the people you care about, in one app. No account, no ads, works offline.">
+<meta property="og:image" content="https://bee-s-knees.github.io/beesnote/img/icon.png">
+<meta property="og:url" content="https://bee-s-knees.github.io/beesnote/">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bee-s-knees.github.io/beesnote/">
+<link rel="alternate" hreflang="ko" href="https://bee-s-knees.github.io/beesnote/?lang=ko">
+<link rel="alternate" hreflang="en" href="https://bee-s-knees.github.io/beesnote/?lang=en">
+<link rel="alternate" hreflang="ja" href="https://bee-s-knees.github.io/beesnote/?lang=ja">
+<link rel="alternate" hreflang="x-default" href="https://bee-s-knees.github.io/beesnote/">
+
+<style>
+  /* ── 브랜드 색: 앱 아이콘·스토어 스크린샷과 같은 값 ──────────────────
+     ⚠️ 여기서 색을 새로 고르지 말 것. 아이콘 배경 그라데이션은
+     store/play/render_icon.py, 스토어 이미지 배경·앰버는
+     store/play/make_store_images.py에 원본이 있다. */
+  :root {
+    --bg: #241a44;            /* BG_BOTTOM(38,25,68)보다 살짝 밝게 — 긴 페이지라 */
+    --bg-top: #4a3480;        /* make_store_images.BG_TOP */
+    --card: #2f2358;
+    --line: #ffffff1f;
+    --ink: #ffffff;
+    --ink-dim: #e2d8f5;       /* make_store_images.BODY */
+    --ink-mute: #b9abd8;
+    --accent: #ffb04d;        /* make_store_images.ACCENT (하단 대메뉴 앰버) */
+    --honey-a: #ffc65e;       /* render_icon.CELL_START */
+    --honey-b: #ee9a22;       /* render_icon.CELL_END */
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink-dim);
+    font: 17px/1.72 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", "Apple SD Gothic Neo", "Noto Sans KR",
+          "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  }
+  h1, h2, h3 { color: var(--ink); line-height: 1.35; margin: 0; }
+  a { color: var(--accent); }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ── 언어 전환 ────────────────────────────────────────────────────
+     세 언어 블록을 전부 HTML에 두고 CSS로 하나만 보인다. JS 없이 열면
+     기본값(en)이 보이고, 크롤러는 세 언어를 다 읽는다. */
+  html[data-lang="ko"] .i18n[lang]:not([lang="ko"]),
+  html[data-lang="en"] .i18n[lang]:not([lang="en"]),
+  html[data-lang="ja"] .i18n[lang]:not([lang="ja"]) { display: none; }
+
+  /* ── 상단 바 ── */
+  .top {
+    position: sticky; top: 0; z-index: 5;
+    background: #241a44e6; backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .top .wrap { display: flex; align-items: center; gap: .75rem; height: 56px; }
+  .brand { display: flex; align-items: center; gap: .5rem; font-weight: 700; color: var(--ink); text-decoration: none; }
+  .brand img { width: 28px; height: 28px; display: block; }
+  .langs { margin-left: auto; display: flex; gap: .25rem; }
+  .langs a {
+    padding: .3rem .6rem; border-radius: 999px; font-size: .85rem;
+    text-decoration: none; color: var(--ink-mute);
+  }
+  .langs a:hover { color: var(--ink); background: #ffffff14; }
+  html[data-lang="ko"] .langs a[data-set="ko"],
+  html[data-lang="en"] .langs a[data-set="en"],
+  html[data-lang="ja"] .langs a[data-set="ja"] { color: #2b1d4e; background: var(--accent); font-weight: 600; }
+
+  /* ── 히어로 ── */
+  .hero {
+    background:
+      radial-gradient(80rem 32rem at 50% -12rem, var(--bg-top) 0%, transparent 70%),
+      var(--bg);
+    text-align: center;
+    padding: 3.5rem 0 2.75rem;
+  }
+  .hero img.icon { width: 108px; height: 108px; margin-bottom: 1.25rem; }
+  .hero h1 { font-size: clamp(1.75rem, 5.2vw, 2.6rem); letter-spacing: -.01em; }
+  .hero p.lead {
+    max-width: 34rem; margin: 1rem auto 0; font-size: clamp(1rem, 2.6vw, 1.12rem);
+  }
+
+  /* ── 스토어 버튼 ──
+     ⚠️ 공식 배지 이미지(Google/Apple 제공 아트워크)를 흉내 내 다시 그리지 않는다.
+     지금은 글자 버튼이고, 출시 때 공식 배지로 바꿔도 자리가 그대로다. */
+  .stores { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; margin: 2rem 0 .75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6rem;
+    padding: .85rem 1.4rem; border-radius: 14px; font-size: 1rem; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent;
+  }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn-go { background: linear-gradient(160deg, var(--honey-a), var(--honey-b)); color: #3a2708; }
+  .btn-go:hover { filter: brightness(1.06); }
+  .btn-soon { background: #ffffff0f; border-color: var(--line); color: var(--ink-mute); cursor: default; }
+  .req { font-size: .85rem; color: var(--ink-mute); margin: 0; }
+
+  /* ── 스크린샷 ── */
+  .shots { display: flex; gap: 1rem; justify-content: center; padding: 2.5rem 0 1rem; }
+  .shots img {
+    /* ⚠️ `flex: 1 1 0` + `min-width: 0`이 있어야 폭이 모자랄 때 줄어든다.
+       `width: 100%`만 주면 세 장이 컨테이너보다 넓어져 양옆으로 삐져나간다. */
+    flex: 1 1 0; min-width: 0; max-width: 20rem;
+    height: auto; display: block;
+    border-radius: 18px; border: 1px solid var(--line);
+  }
+  @media (max-width: 46rem) {
+    /* 좁은 화면에서는 옆으로 넘겨 본다 — 3장을 세로로 쌓으면 페이지가 너무 길어진다. */
+    .shots {
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      padding-inline: 1.25rem; margin-inline: -1.25rem;
+      -webkit-overflow-scrolling: touch;
+      /* ⚠️ `justify-content: center`를 그대로 두면 넘치는 스크롤 컨테이너에서
+         첫 장이 왼쪽 밖으로 밀려 처음 보이는 게 가운데 장이 된다. */
+      justify-content: flex-start;
+      scroll-padding-inline: 1.25rem;
+    }
+    .shots img { flex: none; width: 72vw; max-width: none; scroll-snap-align: center; }
+  }
+
+  /* ── 본문 섹션 ── */
+  section.band { padding: 3.25rem 0; border-top: 1px solid var(--line); }
+  .band h2 { font-size: clamp(1.3rem, 4vw, 1.75rem); margin-bottom: .75rem; }
+  .band p.sub { max-width: 40rem; margin: 0; }
+  .center { text-align: center; }
+  .center p.sub { margin-inline: auto; }
+
+  .grid { display: grid; gap: 1rem; margin-top: 2rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 1.25rem 1.25rem 1.35rem; }
+  .card h3 { font-size: 1.02rem; display: flex; align-items: center; gap: .5rem; }
+  .card h3::before {
+    content: ""; width: 10px; height: 11px; flex: none;
+    background: linear-gradient(160deg, var(--honey-a), var(--honey-b));
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+  .card p { margin: .45rem 0 0; font-size: .95rem; color: var(--ink-dim); }
+
+  /* ── 개인정보·Pro ── */
+  .facts { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .facts li {
+    background: #ffffff0f; border: 1px solid var(--line); border-radius: 999px;
+    padding: .45rem .95rem; font-size: .9rem;
+  }
+  .pro { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 2rem 1.5rem; text-align: center; }
+  .pro .price { display: inline-block; margin: .5rem 0 0; color: var(--accent); font-weight: 700; }
+  .pro ul { display: inline-block; text-align: left; margin: 1rem 0 0; padding-left: 1.2rem; }
+  .pro li { margin: .3rem 0; font-size: .95rem; }
+
+  .closing { font-size: clamp(1.1rem, 3.4vw, 1.4rem); color: var(--ink); text-align: center; margin: 0; }
+
+  footer { border-top: 1px solid var(--line); padding: 2.25rem 0 3rem; font-size: .9rem; color: var(--ink-mute); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: center; }
+  footer .sp { margin-left: auto; }
+</style>
+
+<!-- favicon:start -->
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAFRElEQVR42o2W24scRRTGv1Nd3XPZSTZ3Fy+bxCU3XTUSdpGIEjXRmIjiS4Qlghf8A0RBRJ8VEZ/FB18EBQUR1Cjig6h4IV7wkhhRshpNcGOSTXZ3Lj3dVefzoWdmezo76nRDH4aqX506dc53Sg7c9CJBACSRGej+ge5TGEACJLKxPaMzsjO1a5gMhgF0DKBjAB39dIAGnUlL0zmAzgF0srgJy8G+99EFBkqAoAjVQ/+FjkXD/h+6MXQOCy1rrQJMU6lWnA3Ue1mavrg52n+nGyHA+UawvOruu+OvifE5EIePLH//s9XzdVurpiLwmot7jp597SA6wMBoMw6UuGXH2YN3nRodbcILgO3XnN+788wr7458/M1KCKslp4Cy6HsHctUV+y6mG9HUS71pt26Yf3Tq+H37Tg5X0rRhmEJT+FhWDSc3T85uW984ebr8x+myMQytUlHcRHYGBbpAF5p23cr4kXuO37lzxkaa1q2AxngAAETgYhCYGJ+9ftOFQ5+tfe2DkdOzYa3islD16CCCbaN7C/RmO9gzMfPUQ0eu2zqrbUliEZAkNfeSINNYDHjVlvk9O87NLYTHTgxFobI/4LaPLtqI7eTWM48d/JGpieeDKPTlahbNpX+aSDxnhivJEw/8er5uvjw6PFTxXnshyQ65mzOZq/tv+BPexy0TRm5+wRw7UYIsTSexbTRZVktbLVMJ/N07Z744OryYg0CWpotZrIrI+pW1FhxVvS35l99Y+8yra1bWvNfiIoHB+bp5/MC5Jx/8ux0HkurqZXEp9F6RL2ZbUAIBSIV6gbgW907MRdbbgKDkIyUAhKmTXdsbLqZAoUpVEpC8SualolMsAvVQLxTX5tVj9as31aHSFTj0rWIIRdwIBIR6UPtVMi8VOY2kKtV7J0ND/vUPV790aF2t7JXFEBlhPQ4e3ntmavfZRiOg9VSfy/hOMdslOgGVqlSFeu+YOkmd5BcwQhHAQBXeE+qpQvXMKk0KUlFUYKF6qjeQZgNTt85M3TaTKWcvMO22SZwRQATlSFtNEXiqp2q/ShbVtCsjqlCv3pQif3S6+unRFTbojheoyi3Xnt840kpTESCORURBgXqqdqPc+9JepB6iqqrqvUY2PXR41XNvblhRc1maBoYXGuHTB6Yfvff3ZisMTJZ1IIWq2SEjRwdg83QjbCbB7EIUIIWaVhP37zq5Y+xC4XjHR+vNJgI4dNQNXk0Ad24ujBNTK3syH6L+zieG730zduPm36MgaSfBcKV963izsEArCbwTdE5GvEpkE9K//dUVIjm1AwEGmy/f06MTCK0/cWb41Oyya0f/WlFttdqm2Q4Sh3Zq2qlkL0khQXqFQJeX4/lm9MLb2z85dulQKfWdjMjaK4Itl+/u76uIrDt2as2nP6+PArdp5GwlTBJnDGhEhSpQgEqoshYlIA99e+Wzb018d2JNrbxI7xVzsOWy3YW+qpBy6Opx+MnP63/445K1y+ob18wCTJwhQUIVJZtWw+Tr6ZHn35l88/Cm1Eu15C6mA5C7Jp9dsmtDaISN2EK4a9v01A3fb1w367wBYAOd/nvVq5+Pf/TTeiWGSolSFlM0f9Ug7MA7AeEUlSgl+OGPY4ePX3b7+C87NpwC8PVvl35wZGyuUa6V2wC9ymLi53zvZM3+yWcw4MbR63yBMPXSSMLQeJKpmmqUWJNpOAfQOyVt/5MOwhNGdLgcK0mgCnrF/6Gj2/QHXGzy0ki4rGeDjsjX6iB6lvm2QC/M6S3f84j9StA7zH6jV1cwBd+7dOTpGEBHP3TR6KII/gN2sTgjXm6ZjQAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAckElEQVR42u2deXAc133nf7/3Xh9z4CIAghB4AYR4SjQlkRR1+NAZSbHjql3FWnktV5Rkk3hrXXESK9lK+djaVNYVx06qfNR6Y5fjKifrTZyys5YsRXaykuyYuhxTongTJAiABEGCuAaY6enu995v/5ghjsEMrukezIDd1VUAge4h5vVnfr/v+73f+/3wQ+/+GgDB3IOKfjv/Eip6RalbAICo5FW00P9R/FoqfX/pP3uxFy15zzL+5oVHpfQYlPobiBb43XIfz1IfNwFbERkQkbHgg1oLZACAiGxGZDNKfcsiMiKbUepbFnmT5ZNBNUgGLJeMGbcS2YzIm8y/ikU2I/Impa5iSyODapAMiLzJUr1JiatE5E3WLhkrtxm5LyzyJpECLTXoIrIZkQItNegsshmRAi016CxSoJECLT7o88PnkTe5kRVowcEibxIp0FJDJyKbESnQUkPHIjIiBVrqBVkte5NIgQasQAt+JiKbESnQUi/IIjIiBVrqUhEp0EhnlHofLFKgERml3geLFGikQEvdIiKdEdmMotfS3AhpRMaNrkBnk7GUZJ9Igd6INmN2ECxSoBEZ8x73gsk+N4QCRQSGVPQv0oAFj3jNK9BFl+xvCJ3BEBBJasx6zPdzmMy6igAADIMsQ3FGRKjpxrIZC8OxZslgjAAg6/KsxxIx2b0p070xs7UjWxeXQAgAgDSZFhcG7Z4Bu2/QnkwbpqltSyGA1ri2FehS4FibChQRECDjcKVxd1f63tvHbtsx2b3RAVsBzr0r988s7xmIHTmd/OkvGo+fT3BGcVsTEC1oldeGzcgPw+P3fmXN24ycsHBcpjXetnPyA++7enBPSiQk+Iw8pnWRmxCAMUBTg6FlWrx+vP4HL7UcOVXHmI5ZWhMWjuiaIwOACuCoBgVKwZLBGfkS047o3pT5T48P7N8zAYLI4UohMmK4kBnXBKSRc8KYAolvHqv/q3/o6BmIJWLKEKSmvUzw3oSWpECpDAVKi5ABAHz35sfWqs1gTANgKi3qE+ojvzz4ux/p27Ipo7Nc+yxvGHARH48IjAEQaI+Bwo2bnIfuHEvG1dn++NikYZnEMO9l1pjNyH2ZhmNNkYFInFHa4Vrjo/cO/+HTvXfeMWooVC5jjBZloigliKA9ZnK65ZbUe/dNeD47fSHuesw2NQGuDQVacEsOjrVDBgJwRq6PmSzft2PyDz7a+8GHryRNLTMCENjysShAhABUltfXybv2j+3tnrp6zey9HAMAU1B+srMmbMY0HI+uGTI4I6UxlRGb1rsf+9W+3358oK0lq9ICNDBOSFD+gQCMEUnQLmtvzz58aLSj1e0djA1dswxDC05EuDbIAAC+a1pz1HIMlCEh4mRGxCz1oYcuf/Kj53d0T+os1z5fmR9ZmpdB0LitO/3QgVFT0Jn+eCotbFMjyyFSAzHQhW+5rjlq1mYgAmfkuFwqvP/gtWd+7dx7Dg0LjcrlyAgDMRelEQEE6TJL0G37Ju65dSLt8LP9cSmZZehZMdfasxm5H/Hdmx+rXTI4I0+ytCN2d01+8qmexx8ZbIhJPyNyAfLKHAyBCFSWNzX47z4wdktX+uIVu3/IZgwMgyjvzWpDgRb8SNQoGTl5MT5ldLRmn3j4wiN3X+GGlmmBCJxpqOyRU8HKY+TCbbtSe7unXjjc/H/+acPFYTsZl5xppbG2bEbuptlxjlogg4AhIYOpjDAEPf7A4Cc/2nPr7nHwuApHXixXiCifMYAd26ce2D/GGZ3ui09lhG1qBKSaIqMwCFblCjT3AXU87vn83n0jzzx19oF7r9hAfpYzDFdeLAcRAgDpsrip7tg3fueu1PikOHcxrjTOEiIrKwwcugKlUkGwKrcZnJEv2VRG7Ngy9btPnvuPv9zfVOf7aQEAjEG1HQxBa1RZ3rLOu+/g2I7NzsUhe+BqjHMyeOHSXRXajDzo//6eL1c5GYyR1jiVFm3r3CceHnjsnivCUtLJqU6C6j40IRCIuJIue+5fW7/z4oahEaMurnJvqprJyAfBqpYMRJ2TFxzh/e8eeuapM7fdMkYeUx5nSAg1cCAAIiiPMYDdO1P37RvXGs/2JzJZbpkaZoRI1ZFRHI5qIAORGKOsz7MuP7Rn9JmnzjzynstxoT1HLGXBrOoQQQAAmWV1cXnn7WMHdqRGJoxzl+Ka0DT0UnRq5ckoAkc1KFDOyFc4mRGd7ZmP/2rPr33wQnOD5zuCKJ/HVaMHY6A1So+vb3EfuHO0sz3bOxgbvGYJTvm4O62yAl0IjlW3Gblnn8qI+oR86tG+TzxxdtvWSd8RWiJDQKj5AwEYgpKoJXZtTf/SgdG6uDzbHx+bMiyD2Jy4+2rajHwqzDQcq0tGLgqedoTS8OhdQ3/00VMH911jikl3laMXIUZEPGZwunV36r59Y67HT/clXJ/bpl5Klk4FyJixHKtLBmfk+jyT5bftGPuDD5/+lfsvJgztOQEsslc5IkQgXV6fkHffMXZb9+SVUevCYAyATDEdd181MnJT2S+tIhkMSRNOOWLrhvSHH+67b/8VYOQ7AnGtWQtYcA8IERoxBRr++c3mv3mhvXcwlpg13V0VMnJL9o+ulgLljLIeR4SPPHrh9548vb1rQmZXPwq+enF3JI3dXemHD47GLH20p871mWXoBRJEAleghQ9o1+ZHVsVmcEaptNHZnv7Mb7zzvjuHmEI/Ly8IbsgjlwDge8zktO/W8f3bUyfOJwdHrJilizz/kG1Gfsl+1/wgWGXIyBjv2Xf1s795tL3VcaeMtS0vlpsAIB2+odV9cP/I5WH7VH88Zuk52UMVIQOKwFEpMt77rqufevodgeR7nHOKwCjIRPR9Zhn6vgMjfZdjp/oTM3xUiox5cFSQjD9++h3pM61YTce1QjUhSqHWeP/Bkf7LsdMDiZipKa9PK0EGzNkOGb4CZUhZj29pS3/iiRNaAmhgqCFiYwEXo1FLeObDvb2XY4PDtmVoTSEqUJrf461sm7HUPWq5XYS//8TJRMJXkt2w2nNZ2SHKZ4mE/4dP9mqCFZJBtMx9dbPLW1ck0sUYpbPig/cO7Ooe8RzOmL5e7SA6FzoZ067D92yf+HfvHZrKcl7cCwfpTWb1eKtQdJw8n29sTT/1yDnpcoCFPgLRMU+iknT5rz928fCxxqtjpiEKRi8UMvJ1SCuxoobgeOzQnuFYwpN5hxKdSz0RSUqM1Xn33DLmuHxuilNYZOTcSiVW4aXC+rj36MFL5LNIhC77IGCoyWPvv2u4ISGlwpAUKCxQvCWkzB2GNOXy/TvGNrZN+R5HXOomjsWWJLBWRGUgwQ/fY5vaM3s6J9842ZiwpV5ozaNcm1EIR3jZfoAkNdu1ZQKF0i7nGMBKlSYwBPGqj5FoDb7EQOK/mgCF2rN18vCxJsSCfdvBk1G0l33wGcKa0DbUvm2jIBHLtBkIWoNlEJiUGueTGV7NS3REELNo3ToJCl0XGSvrvSMQSLyte8I2lA6fjDwc4e4qQFAK45ZsbXBIIUJZ29G0AiumB4eN//WDpp+ftCcdxrB6BQwRxEza0+X+1gfGdna6boaVs4sCAUhia6ObiKmszzibmbOEQQYAibB3IjECX2Fjk1ef8JQuK9dPE5g2nR2w/stfbOi/aiRjmrNqnxFnPfajNxKvvhP74sev3L03k80wzlZOh9LQkJSNdf6lYVtcf+8BKtCCX4nQ97UCKY11cc80pFS5RceVCXZgCE4WPv311ssjorVRSlXFRmNGjVNTnc5k2ae+3vq/P3OptUFKiSt2hYrAMlVdXCodrs2Y3cs+zL3wCFpjc53LxfS60Yrg0GDY+vDR+LFeqyGpfIm5oHC1nwRSYcLWQ6Pi+cNJbpGmcgYBudAt9a7SCNMFDcMhY9pyhF+NCWHWiK3MciAgHeu1CKDmoquKUHA4dsEGRWWqrlzlzLBtxqK1z4OuB1oWG/l7CWo5gZDmlM9e8SDMjHKYZCxY+zz46tJl0YEAQLRniwPQWHOAMCSpYPfWLDAqOwI425tgsAqUFm9XvpxV+JX1KlgJHIz8LLtnb2bXZjeV5oaojSRkBBCcHJetb1SPHUopF8vd/E0zD2jlNoMWJ6MoHOFUpKd8Bv6KTyRSCuKW+pPfGGppkNcmhFRY3ktW4lQaxqc4Q/jvTw/d1Or5HiKU94qzJ4LheJNSbiWsnkjle9vcIkU2izu3ZL/5RwNf+0HzL87Ep7IMkap2QkuAtqkP7Mr81vtH93Y7Toax8gIztORflk3G/DhHiD2RytUc03uRHYdtavU+9zuDI6MilebIoErhQCANcVu3NftAmCMjIFlLYdsMKOzxFnJPpCDYyIs7z0NysSGu1tWpqo6DIWgNjsPydWYoCDB0iAp0XiZYZcgIkI7rW8SkQqlqY6oSwoQ4RG8yt8dbhbpyVmOeBNR6FlAI3mTRXvYhdOWc0dvRUY7eoLkt6UKxGQv0sg+8K2d0hIJJeDYjd5GoSI9nCilbAmqnIFilvcmKFOiiDQBD6P6dW6en/BEIFppQcJqd8FKts1n0FSJSINvErw9juN5k+nGLivaFh0Aqe4LBybBVZopPpAVDquJMMLRNXV8ntc+yHgZeTDckbzL9uEWl+sIHEwTTGmxLj6TEt77X9trJZCrDqzdCirkcUr1vW+bpX7rW2e5mHB5EHCxfdTBUmzEvCBZeX3gKhg1NYBk0cNX6+Fc2n7lkJ21dhYWtC47xKei5ZL/ydv1f/E7/7dvTjlNWGun0en3YNgOWkOwThDeZeSvl0sEQPAWf/lbH+cv2+sbZe3uq+mhpkKkM/+Nvbvz2fz3XlJBSYXkSlSA0BVpghFkldAYGswHEtvWrx+uO9CSa6mQ+TbAWTl9iXUwNDJsvvN5o2FprDF510FJX4aGo3aEiZCyU7BMMGTP5KOUGwYgQUL9zPlaLgTRFIDi90xsDBQi6vEwwKhzcoL3JInAEoUCLBGnKcSp0fc9t7catpMZiimG5gzA3lyxQBbo4HAEo0EIyMJiFN007N2XCCStB2DV6pMLtHQ5wTVR+kkFYCnSRTLDAvAkU6xRRxsmA3Cy/55ZUV3t20uGC14xr4YxcnzXVyUcPjEmX5dfuyzyXTcaSFCgUL/sUMhkUSI0KDfVx+d+e6k/aamxK1ITyIIBJh/sSP/Xkxc72rOthQLVJluVNlqpAS2aChUkGzEkVLCMxwsny27vT3/hEz1efbT96Ie64HBGqOQhmGXpXd/q3Hxs6tDuVznDGygvZUaHkCMObFCT7hKVAS/iVcmqYUDrDtnc4X/7P5waGrWoOnyOAJkzYanOryzml02WTUfKxBqZAC+4S4SjQeTPZIFvakOMhALY3eRtb3FD+j6A8CoLW6PpIXnjlVkOxGXk4QvcmAacIzqhoTyL5WBNL9gw1BFKHiIos1weoQEtMZUMlY2ZTMQW7SlYrc1oKaI167usQwLJ6siyPDJpbhzQkMqKjxrzJCnrZr5gMmt1zJiIniBzSsBRowexSBK5AK5lFSiFPN2oj6zwEm5HDT4TpTSjwZJ/ZaYKcEcfw5ipEgDK4DL/wc2cDUKBUIghGoduMgFyKJhCcErZ0szzj8pB2rxAwwaguIZVEx+XV0vdj+vOFIXoTmJcJVgFvogNIEyS0DTWZ5d/88cafnWiYSAvGgl/BRwRNYAq9e1PmyfcO7dmSnsqIqukLs9gYBkRGyco+wZNBATgVTWAJfWXC/P2v3/x2bzJu6XzMEUOJXwHBmUuJHx1Z9ydPnX/49pFq4INKJQiGQEapJfvgyZhJ9ikDDwagiT77N53v9CXXN3pKhf6sYpbveuwz3+7a1Ozc3JHJepyt7h5MWlKXpkDIKLpkHw4ZAaQJYtxSr59qeONMQ3PS9yXT4Wf4SYWWqaey/O9+2mYIXWWrOMErUFhCYfxgZ63TdJRZTRCQ67d6k5oq+uFVGm1TnxxIpB3Oma4mURqizShVGD9QMohgepdFmYqDADS4/upsRvAVKoWCr/YGu6JjGA4ZM3GOsMiYk8URQJxj+03pCi+pMCRf4ebWbDIm09nV1hzz4xyhkZHXHKGSQQSM6dHJmOeXNbIMKZtl9+4e39TipLMVShPMhb+Uwg8cGEagVQ/9MyTPZyMpi7M5mcphkJGrWx+uzUBAjjTpmFmPIxCtVEYikCdxXdL71IfOCU4TGTFd4ie805U4nDJ//cGL9+0dmXI4Q72KG2BIEyI5Hp90DM6oLDKWVkhfhEpGviU6p/GMPeFYbQ1ppVk5aT5TDr9r5/j//Njxrz6/+dTFZNZjIbkYIuCM2pu83/uVvifefdlxGa52ypkGMJieyNjjaYsj5RpVhWQzct+JUMnIjzJSxhXDqfhNTZNAHMpxLkxPOvxdW1Nf+9jx80OxsbTBQoPDMnRnm9OY8CcdgZDLnVjVVRZCzvXwhJXOCpNrCpmMYkGwQMmY/sS7WX60t/WOzkFNgpf3CeRIGZcjUFdbJtTpAwG6PptIi3yzsIACNuXwKpg+0tuS9bidUFJDqGTMgyMEMgCAiATTpy61+CqYdbKcsHV9lvUh7Ay/6mkjh0hSspMDjYKTpgXMWDBkFO1lHzAZAKQJLUOeutTSd7V+c8uEK0UwDRMRanhv5PLNhi1079XkiYEmy5Clm7aUpUBLFMYPjYw8g5xSjvXiW9sMoXTUp3z5p9ZoCvX8v20ez5iC62XbDFo2Gdd3vIVMRm5lxDbl62c7UhnT4Iqip728bk9kCDWRMQ6fbouZpcxGYN5k+gd8R8dDYZNx3Xjokcm4Ijy0/VLWF9W7Uw2qbneU0piw/G/8y67DpzfELFms23LwZEz3sg+djOvLqv7339j51oX1SctTCiKTsJRTKUha3pHzLd99dVvcksVqv4RCxrTmCJ2M/LIqagT60g8PpRzTFFoTRnZh0cw3U+hUxvzCs/sYUrH1hyAVaMEP+I6ND1aGDAAiQlPo4VRicLTufXsuaEKtsZobpqx2xwVkjEyu/vR7d7zd15yw5quNsGzGNBwPVYaMWaU51dmh5r7hxvtvuYBAUjEWWRAokkdiCm0K/dm/P/jK8Y76uK90RcmYgaMSZMxsbsKYqc4OtfQNNxzYdikZ81xfsKgFAswuEMXqbC/jij/93v5XTnTUx73Kk5GHo5JkzOLDPzvU/Oa5ju4No1taxj1faMLIguQGoSHuHhto/vTfHTrS27paZAAA377xoQqTcT2kjjHTH5mK/79jXb7it2y8YpvS9cUN20hFE2rCpO1pwm//ZOcXnr19LG0n7SV7kyAUaMGvZjRHJcmYth8G1wDw2tlNxy+u39ic2tQ8ToC+YoA31gZYpdE0VML2j/a1fO4f9z/3i07bUAbXFVagBY98NhyVIWNeE3KAmOVfGqv/l2NdV8aTna1j6+vTUnGlGbsBpjFKM86ozvYujyW+9qO9X/3R3isTifqYR4QEq0nG7NlKRW1GYUtRQlNIzujYxfUvn+iUim9vv5a0PVcKAlyrSkQTEmB9zHN9/vev7vjzZw+81dcat6TJlabKRboWyFHNwbGaZMxkqQPETOlJ/nrPxjfPb6yPud1to4JrT3IEWEuI5DaCxy3f5PrlE5v/7P8efPHoFkSKW1IXMRirQ0ZhEKxi3qSUjCKNDCFmypHJ+MsnOs9cbrmpMbWleVxplIqvjemu0mhwXWd7Jy62fPGH+//2p7sms2bS9nIF5sJehV9YgdK8qeyDq2szoEiVFxRcW4bsHW56+UTXyFR8W9toS13ak1xrVrsmJBcOboh51yZj33hp71devK1vuCEZ8zjTy87PCNlmlIZjNWxGkfdBaBmKAN7u2/CT01uB4OYNIwnLcyWnWpvuakIiSMY8X/Hvv3nznz938M2edstQlqnUQmXyV5OMYnCsqs0o+Hfu8xQzpeMZPzu75ciF9nVJp7N1jCF5kteKvFAabUNahnz1TMefPXvnc0e2aY0JSxKhptDzQFdMRi7O8WB1kkGzTAhnFDP9q6nESye6eofXbWqe6FiX0lTtQkRpNISus72eocYvvbj/r1+5dSxj11k+Ym6qQtVMxlzLsSreBBYhY3ZE1eTa4LpnqPmlE10TGXvb+tHmuozrC6Kqm+7msi7q497YVOxbP9n7pRf39ww1JW3f4PlmPOHtRCpHgZZwK1VpM+ZHzAjQNhURHunt+NnpLYZQN7eNxEzfkxyu79le9Y6QRJC0fCJ4/q3uzz936PDZDkso21RaYwV2IgViM2bBURUKdAEyqLBlE0DM9NOu+ZNTW4/2t7fUZTrXjyOQrwTiqmUQEYDWaBkyZso3zt30hecPff/nO6RmCcsnQtIY6r7WwMnI5ZA+UN02g0q1K2JMx0w1OF730olt/dcau9aPtjempGJSs8oLEaVRMF0f8/pH67/84v5vvrJveDJeF/Ny8iLsHc9hkAEEfEfHgzVHxvW3h0RoCiW4Pn259aUTXRnX7G4baYpn80KkUtNUIKyPuZOO9beHb/3LF+48NdicsPyZZbPaJAMA+PaOB6tSgS40KFS4dIcxU0rF3+zteK1ns2nI7e3XTKFcGW4CgCbUBAnL50z/09Ftn//h3a+c2iKYzu0eoMJykDWgQOflcxSBo/ptRhEZyJBipp9y7J+e7jxxqa2tcXJLyzgAeEpcX/0NNHpBzDJk3PLf7m/74gt3ffeNPa4vkrYLgDPhzpq1GdO77KtdgS5KxvSvlGaGUJah3u5vP3ax7f7dPf/h0NEtzeNTrikVC6qil9JMcF1vO33XGr7z2q3/fLxLKqyPZTXBnAITNU4GABVYjtqzGfNuyQsRxuj4pfUvn+yUmt28YaQ+5pafAHB9kd3N+uK7b+z5wgt3Hx1oi1vSFLm8cFxLZBS4lTVAxnSdEwSAmOF7UrzWs/nN8xuTtte9fsQSylc8r1WXrkUo7ykSpi+YfulU5+d/eM+Pj3Uzlltkn+e01gQZs+GoGQW69AYgRLkEAH9kKv7Kyc4zQ63NicyGxsm46fmKK81wsWosRKg1Y0hJ2yOgowMbvvzjQ9959daprFVnuzhbXoRZD7RiCrTgSeP7D35uLdmMojflImMZzwTQ79o89IF9J/d3Xqqzs640PMlzS6bTRQqnv2dIplCWIScd6+e9N/3gyM63+jcQQML0ry8KUsWqPlbYZsACtc9rQoEukYx8SBsgbroA8Hb/hl9cuGnXTVfvublvf+fFzesmEqaPcwPvCEAEWd/oHW78eW/Hv57dfOJSK2cUn8GiEtWlV5eMnOX4H2vYZhQpn4gEAI4vslI0xrIdTanO1tGtLWNJywMgRCCCqax14VpT73DjpbH68YxtGdI25FwsaM2TsUBh/LVJxvUZB1iGjJm+1Kzn6rpTl1sKWukRASIILk2hGhOOJlxkz/daJKMIHDWtQJdyy3S+uyJEINvwmTnrHVNOeVCug4cmLFYbk9aqAl20MP6atRlFPztEqPTSWaMbxGbMKvu05hToEslY4FUr02GvmsmY3cv+hrMZyySDbjQyZhfGj8iIbEbhXewGUaBL/LNplXoiVYkCLREEi2xG5E3mDR2LFGjkTUoNnYhsRmQzig8dAYvIiGxGqQfJIgUaKdBSQycimxF5k2IPkmZbjoiMyJsUfhERGZHNKPU3s4iMyGaUupxFCjRSoCW7oETeJLIZpYaMRd4kImORTLDIZkQKtHiyT2QzIgVa9BYWKdBIgZbs6Rl5k0hnlHpnLPImERmlrhKRzYgUaKnHzSKbESnQUlexAMiIFOhaUaBUJM4ReZNIZxT7NYu8SURGqcf9/wHxSWCM3nmMYgAAAABJRU5ErkJggg==">
+<!-- favicon:end -->
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="img/icon.png" alt="" width="28" height="28">Beesnote</a>
+    <nav class="langs">
+      <a href="?lang=ko" data-set="ko" hreflang="ko">한국어</a>
+      <a href="?lang=en" data-set="en" hreflang="en">English</a>
+      <a href="?lang=ja" data-set="ja" hreflang="ja">日本語</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═════════════════════════ 한국어 ═════════════════════════ -->
+<div class="i18n" lang="ko">
+
+  <section class="hero">
+    <div class="wrap">
+      <img class="icon" src="img/icon.png" alt="Beesnote 앱 아이콘" width="108" height="108">
+      <h1>기억하려고 애쓰지 않아도 돼요.</h1>
+      <p class="lead">Beesnote는 당신의 보조기억이에요. 할 일, 습관·루틴, 메모, 일기, 달력, 그리고 챙기고 싶은 사람까지 한 앱에 담고, 전부 검색으로 다시 꺼냅니다.</p>
+      <div class="stores">
+        <a class="btn btn-go" data-store="android" href="https://play.google.com/store/apps/details?id=it.beesk.beesnote">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.2 2.6a1 1 0 0 0-.7 1v16.8a1 1 0 0 0 .7 1l9.1-9.4zm10.6 8.2 2.9-3-9.3-5.4zM5.4 21.4l9.4-5.4-2.9-3zm12.3-7.1 2.6-1.5c.7-.4.7-1.2 0-1.6l-2.6-1.5-3.2 3.3z"/></svg>
+          Google Play에서 받기
+        </a>
+        <span class="btn btn-soon" data-store="ios">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v11.2l3.6-3.6 1.4 1.4L12 17 7 12l1.4-1.4L12 14.2V3zM5 19h14v2H5z"/></svg>
+          App Store 준비 중
+        </span>
+      </div>
+      <p class="req">Android 8.0 이상 · iOS 판은 준비 중이에요</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="shots">
+      <img src="img/ko-2.webp" alt="할 일과 습관·루틴 화면" width="720" height="1280" loading="lazy">
+      <img src="img/ko-3.webp" alt="달력과 일기 화면" width="720" height="1280" loading="lazy">
+      <img src="img/ko-4.webp" alt="인물 사전과 관계도 화면" width="720" height="1280" loading="lazy">
+    </div>
+  </div>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>정리하는 속도보다 정보가 빠르게 들어와요</h2>
+      <p class="sub">Beesnote는 종류마다 자리를 분명히 갈라놔서, 담는 데는 몇 초면 되고 다시 찾는 건 검색 한 번이면 돼요. ADHD로 그 속도 차이를 매일 겪는다면, 이 앱은 그걸 전제로 만들었어요.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>담는 자리가 종류마다 따로 있어요</h2>
+      <div class="grid">
+        <div class="card"><h3>할 일</h3><p>우선순위, 소요시간, 시작일과 기한이 있는 체크리스트. 작업을 그룹으로 묶고, 오늘 할 것만 '오늘'에 담고, 끝낸 건 한 번에 보관해요.</p></div>
+        <div class="card"><h3>습관·루틴</h3><p>매일·요일·격주·매월 N일·매년 주기로 반복해요. 연속 일수와 2주 기록이 카드에 함께 보여서 습관이 붙는 게 눈에 보입니다.</p></div>
+        <div class="card"><h3>달력</h3><p>주간은 그날 할 일을 한 줄로, 월간은 날짜마다 일정·작업·루틴 개수를 세어 보여줘요. 일기에 붙인 태그로 어떤 날에 뭐가 있었는지도 되짚어 봐요.</p></div>
+        <div class="card"><h3>메모</h3><p>아이디어, 자료, 장보기처럼 탭을 직접 만들어서 텍스트·목록 블록을 담아요. 끌어서 순서를 바꾸고, 블록을 다른 탭으로 옮길 수도 있어요.</p></div>
+        <div class="card"><h3>일기</h3><p>하루 마무리로 그날을 닫아요. 있었던 일을 적고 태그를 달고, 못 끝낸 일은 나중에·내일·삭제 중에서 정리해요.</p></div>
+        <div class="card"><h3>사람</h3><p>생일, 기념일, 그리고 그 사람에 대해 자꾸 잊어버리는 것들. 챙길 날은 앱이 정하지 않고 직접 골라요 — 백일, 첫돌, 환갑, 49재, 사귄 지 100일, N주년까지 전부 이 방식이에요. <strong>음력</strong>도 지원하고, 가계도·조직도·지인 관계도를 그려 선마다 어떤 사이인지 이름을 붙일 수 있어요.</p></div>
+        <div class="card"><h3>검색</h3><p>작업·루틴·일정·일기·메모·사람을 한 번에 찾아요. 제목뿐 아니라 설명·본문·태그까지 보고, 초성으로도 걸립니다(ㄱㅁㅅ → 김민수).</p></div>
+        <div class="card"><h3>알림</h3><p>정한 시각에 알려줘요. 기념일, 종일 일정, 오늘이 기한인 작업처럼 시각이 없는 것들은 알림을 여러 개 쌓지 않고 아침에 한 통으로 모아 보냅니다.</p></div>
+        <div class="card"><h3>상단 문구</h3><p>직접 쓴 글귀가 '오늘' 탭 맨 위에 떠요. 하루마다, 한 시간마다, 앱을 열 때마다 중에서 고를 수 있어요.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>계정도, 광고도, 추적도 없어요</h2>
+      <p class="sub">데이터는 기기 안에만 있고 앱은 오프라인으로 동작해요. 전부 파일 하나로 백업해서 새 기기에서 되돌릴 수 있습니다.</p>
+      <ul class="facts">
+        <li>계정·가입 없음</li><li>광고 없음</li><li>추적·분석 없음</li><li>오프라인 동작</li>
+        <li>다크모드</li><li>한국어·영어·일본어</li><li>백업/복원</li>
+      </ul>
+      <p style="margin:1.25rem 0 0"><a href="privacy-policy.html">개인정보처리방침 읽기</a></p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="pro">
+        <h2>핵심 기능은 전부 무료예요</h2>
+        <p class="sub">Beesnote Pro는 구독이 아니라 <strong>한 번 결제하면 끝</strong>이에요.</p>
+        <ul>
+          <li>루틴·관계도 개수 제한 해제</li>
+          <li>예비 알림(최대 하루 전)</li>
+          <li>백업 내보내기</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="closing">기억하고 싶은 전부를, 한 앱에.<br>생각은 자유롭게. 나머지는 Beesnote가 기억해요.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Bee's Knees</span>
+      <a href="privacy-policy.html">개인정보처리방침</a>
+      <a href="mailto:sysop@beesk.it">문의: sysop@beesk.it</a>
+      <span class="sp"></span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═════════════════════════ English ═════════════════════════ -->
+<div class="i18n" lang="en">
+
+  <section class="hero">
+    <div class="wrap">
+      <img class="icon" src="img/icon.png" alt="Beesnote app icon" width="108" height="108">
+      <h1>Stop trying to remember everything.</h1>
+      <p class="lead">Beesnote is your external memory — tasks, routines, notes, journal, calendar and the people you care about, in one app, all searchable.</p>
+      <div class="stores">
+        <a class="btn btn-go" data-store="android" href="https://play.google.com/store/apps/details?id=it.beesk.beesnote">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.2 2.6a1 1 0 0 0-.7 1v16.8a1 1 0 0 0 .7 1l9.1-9.4zm10.6 8.2 2.9-3-9.3-5.4zM5.4 21.4l9.4-5.4-2.9-3zm12.3-7.1 2.6-1.5c.7-.4.7-1.2 0-1.6l-2.6-1.5-3.2 3.3z"/></svg>
+          Get it on Google Play
+        </a>
+        <span class="btn btn-soon" data-store="ios">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v11.2l3.6-3.6 1.4 1.4L12 17 7 12l1.4-1.4L12 14.2V3zM5 19h14v2H5z"/></svg>
+          App Store — coming soon
+        </span>
+      </div>
+      <p class="req">Android 8.0 and up · iOS version coming soon</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="shots">
+      <img src="img/en-2.webp" alt="To-Do and Routines screens" width="720" height="1280" loading="lazy">
+      <img src="img/en-3.webp" alt="Calendar and Journal screens" width="720" height="1280" loading="lazy">
+      <img src="img/en-4.webp" alt="People directory and relation graph screens" width="720" height="1280" loading="lazy">
+    </div>
+  </div>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>Information arrives faster than anyone can file it</h2>
+      <p class="sub">Beesnote gives every kind of thing its own clearly marked place, so capturing takes seconds and finding it again takes one search. If that is what living with ADHD feels like, that was the design brief.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>A place for every kind of thing</h2>
+      <div class="grid">
+        <div class="card"><h3>To-Do</h3><p>Checklists with priorities, time estimates, start dates and due dates. Group related tasks, pull what matters into today's list, and clear everything you finished in one go.</p></div>
+        <div class="card"><h3>Routines</h3><p>Daily, weekly, every other week, monthly or yearly routines, with streaks and a two-week history strip so you can watch the habit form.</p></div>
+        <div class="card"><h3>Calendar</h3><p>A weekly agenda for the day in front of you, and a monthly grid that counts the events, tasks and routines on every date. Tag your journal entries and see which days they fall on.</p></div>
+        <div class="card"><h3>Notes</h3><p>Make your own tabs — ideas, references, shopping, whatever you need — and fill them with text and list blocks. Drag to reorder, or move a block to another tab.</p></div>
+        <div class="card"><h3>Journal</h3><p>Close the day with a wrap-up: write down what happened, tag it, and decide what to do with whatever you did not finish — later, tomorrow, or drop it.</p></div>
+        <div class="card"><h3>People</h3><p>Birthdays, anniversaries, and the things you keep forgetting about someone. You pick which milestones matter — a 100th day, a 10th anniversary, a 60th birthday — instead of the app guessing. <strong>Lunar dates supported.</strong> Draw family trees, org charts and friend groups, and name what connects each pair.</p></div>
+        <div class="card"><h3>Search</h3><p>One search box across tasks, routines, events, journal, notes and people — titles, descriptions, body text and tags.</p></div>
+        <div class="card"><h3>Reminders</h3><p>Alerts at the time you set. All-day things — anniversaries, all-day events, what is due today — arrive as a single morning digest instead of a pile of separate notifications.</p></div>
+        <div class="card"><h3>Your Phrases</h3><p>Write the lines you want to keep in front of you, and Beesnote rotates them at the top of the Today tab — daily, hourly, or every time you open the app.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>No account, no ads, no trackers</h2>
+      <p class="sub">Your data stays on your device and the app works offline. Back up everything to one file and restore it on a new phone.</p>
+      <ul class="facts">
+        <li>No account or sign-up</li><li>No ads</li><li>No trackers or analytics</li><li>Works offline</li>
+        <li>Dark mode</li><li>English, Korean, Japanese</li><li>Backup &amp; restore</li>
+      </ul>
+      <p style="margin:1.25rem 0 0"><a href="privacy-policy.html">Read the privacy policy</a></p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="pro">
+        <h2>Every core feature is free</h2>
+        <p class="sub">Beesnote Pro is a <strong>one-time purchase</strong>, not a subscription.</p>
+        <ul>
+          <li>Unlimited routines and relation graphs</li>
+          <li>Advance reminders, up to a day ahead</li>
+          <li>Backup export</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="closing">Everything you want to remember. One app.<br>Think freely. Let Beesnote remember the rest.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Bee's Knees</span>
+      <a href="privacy-policy.html">Privacy policy</a>
+      <a href="mailto:sysop@beesk.it">Contact: sysop@beesk.it</a>
+      <span class="sp"></span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═════════════════════════ 日本語 ═════════════════════════ -->
+<div class="i18n" lang="ja">
+
+  <section class="hero">
+    <div class="wrap">
+      <img class="icon" src="img/icon.png" alt="Beesnote のアプリアイコン" width="108" height="108">
+      <h1>すべてを覚えておこうとしなくて大丈夫です。</h1>
+      <p class="lead">Beesnoteは、あなたの外部記憶です。やること、習慣・ルーティン、メモ、日記、カレンダー、そして大切な人のことまで1つのアプリに置いて、検索で取り出せます。</p>
+      <div class="stores">
+        <a class="btn btn-go" data-store="android" href="https://play.google.com/store/apps/details?id=it.beesk.beesnote">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.2 2.6a1 1 0 0 0-.7 1v16.8a1 1 0 0 0 .7 1l9.1-9.4zm10.6 8.2 2.9-3-9.3-5.4zM5.4 21.4l9.4-5.4-2.9-3zm12.3-7.1 2.6-1.5c.7-.4.7-1.2 0-1.6l-2.6-1.5-3.2 3.3z"/></svg>
+          Google Play で入手
+        </a>
+        <span class="btn btn-soon" data-store="ios">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v11.2l3.6-3.6 1.4 1.4L12 17 7 12l1.4-1.4L12 14.2V3zM5 19h14v2H5z"/></svg>
+          App Store は準備中
+        </span>
+      </div>
+      <p class="req">Android 8.0 以上・iOS 版は準備中です</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="shots">
+      <img src="img/ja-2.webp" alt="やることと習慣・ルーティンの画面" width="720" height="1280" loading="lazy">
+      <img src="img/ja-3.webp" alt="カレンダーと日記の画面" width="720" height="1280" loading="lazy">
+      <img src="img/ja-4.webp" alt="人物リストと関係図の画面" width="720" height="1280" loading="lazy">
+    </div>
+  </div>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>情報は、片づける速さより先に入ってきます</h2>
+      <p class="sub">Beesnoteは種類ごとに置き場所をはっきり分けているので、書き留めるのは数秒、あとで見つけるのは検索1回です。ADHDで毎日その差を感じているなら、このアプリはそれを前提に作られています。</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>種類ごとに、置き場所があります</h2>
+      <div class="grid">
+        <div class="card"><h3>やること</h3><p>優先度、所要時間、開始日と期限のあるチェックリスト。タスクをグループにまとめ、今日やる分だけ「今日」に入れ、終わったものはまとめて保管できます。</p></div>
+        <div class="card"><h3>習慣・ルーティン</h3><p>毎日、曜日ごと、隔週、毎月N日、毎年の周期で繰り返します。連続日数と2週間の記録がカードに並ぶので、習慣がついていくのが目に見えます。</p></div>
+        <div class="card"><h3>カレンダー</h3><p>「週」はその日にやることをひと続きで、「月」は日付ごとに予定・タスク・ルーティンの件数を数えて表示します。日記につけたタグから、どの日に何があったかもたどれます。</p></div>
+        <div class="card"><h3>メモ</h3><p>アイデア、資料、買い物など、タブを自分で作ってテキストとリストのブロックを入れます。ドラッグで並べ替え、ブロックを別のタブへ移すこともできます。</p></div>
+        <div class="card"><h3>日記</h3><p>1日の振り返りでその日を閉じます。あったことを書いてタグをつけ、終わらなかったことは「あとで」「明日」「削除」から選んで片づけます。</p></div>
+        <div class="card"><h3>人</h3><p>誕生日、記念日、そしてその人について何度も忘れてしまうこと。お祝いする節目はアプリが決めず、自分で選びます。百日祝い、還暦、四十九日や一周忌、付き合って100日、N周年まで、すべてこの仕組みです。<strong>旧暦にも対応</strong>しています。家系図・組織図・知人の関係図を描き、線ごとにどんな間柄かを書き添えられます。</p></div>
+        <div class="card"><h3>検索</h3><p>タスク・ルーティン・予定・日記・メモ・人をまとめて探します。タイトルだけでなく、説明・本文・タグまで見ます。</p></div>
+        <div class="card"><h3>通知</h3><p>決めた時刻に知らせます。記念日や終日の予定、今日が期限のタスクなど時刻のないものは、通知を積み上げず朝に1通だけまとめて届きます。</p></div>
+        <div class="card"><h3>トップのフレーズ</h3><p>自分で書いた言葉が「今日」タブの一番上に出ます。1日ごと、1時間ごと、アプリを開くたびから選べます。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>アカウントも、広告も、トラッカーもありません</h2>
+      <p class="sub">データは端末の中だけにあり、アプリはオフラインで動きます。すべてを1つのファイルにバックアップして、新しい端末で元に戻せます。</p>
+      <ul class="facts">
+        <li>アカウント・登録なし</li><li>広告なし</li><li>トラッカー・分析なし</li><li>オフラインで動作</li>
+        <li>ダークモード</li><li>日本語・韓国語・英語</li><li>バックアップと復元</li>
+      </ul>
+      <p style="margin:1.25rem 0 0"><a href="privacy-policy.html">プライバシーポリシーを読む</a></p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="pro">
+        <h2>主な機能はすべて無料です</h2>
+        <p class="sub">Beesnote Proはサブスクリプションではなく、<strong>一度きりの購入</strong>です。</p>
+        <ul>
+          <li>ルーティンと関係図の数の上限が外れます</li>
+          <li>事前の通知（最大1日前）</li>
+          <li>バックアップの書き出し</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="closing">覚えておきたいこと、ぜんぶ1つに。<br>頭は自由に。あとはBeesnoteが覚えます。</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Bee's Knees</span>
+      <a href="privacy-policy.html">プライバシーポリシー</a>
+      <a href="mailto:sysop@beesk.it">お問い合わせ：sysop@beesk.it</a>
+      <span class="sp"></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// 언어 선택: ?lang= → 저장된 값 → 브라우저 언어 → en.
+// ⚠️ JS가 없으면 CSS 기본값(html[data-lang="en"])대로 영어판만 보인다 — 페이지가
+//    빈 채로 남지 않게 하려고 언어 블록을 JS로 만들지 않고 HTML에 다 둔 것이다.
+(function () {
+  var LANGS = ['ko', 'en', 'ja'];
+  var KEY = 'beesnote.lang';
+
+  function pick() {
+    var q = new URLSearchParams(location.search).get('lang');
+    var hash = location.hash.replace('#', '');
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    var wanted = [q, hash, saved].concat(navigator.languages || [navigator.language]);
+    for (var i = 0; i < wanted.length; i++) {
+      var v = (wanted[i] || '').toLowerCase();
+      // 'ko-KR' → 'ko'. 정확히 일치하는 것만 쓰고 나머지는 영어로 떨어진다.
+      var base = v.split('-')[0];
+      if (LANGS.indexOf(base) >= 0) return base;
+    }
+    return 'en';
+  }
+
+  function apply(lang, remember) {
+    document.documentElement.lang = lang;
+    document.documentElement.setAttribute('data-lang', lang);
+    if (remember) { try { localStorage.setItem(KEY, lang); } catch (e) {} }
+  }
+
+  apply(pick(), false);
+
+  // 전환 버튼은 진짜 링크다(JS가 죽어도 ?lang= 주소는 공유된다). 여기서는 새로
+  // 불러오지 않고 주소만 바꿔 끼운다.
+  document.querySelectorAll('.langs a[data-set]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var lang = a.getAttribute('data-set');
+      apply(lang, true);
+      history.replaceState(null, '', '?lang=' + lang);
+      window.scrollTo({ top: 0 });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
