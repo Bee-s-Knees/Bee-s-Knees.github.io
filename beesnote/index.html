@@ -51,6 +51,9 @@
   h1, h2, h3 { color: var(--ink); line-height: 1.35; margin: 0; }
   a { color: var(--accent); }
   .wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.25rem; }
+  /* 스크린샷 줄만 글 단보다 넓게 — 넉 장을 62rem 안에 욱여넣으면 한 장이 226px까지
+     줄어 얹힌 제목이 안 읽힌다. */
+  .wrap.wide { max-width: 78rem; }
 
   /* ── 언어 전환 ────────────────────────────────────────────────────
      세 언어 블록을 전부 HTML에 두고 CSS로 하나만 보인다. JS 없이 열면
@@ -116,7 +119,9 @@
     height: auto; display: block;
     border-radius: 18px; border: 1px solid var(--line);
   }
-  @media (max-width: 46rem) {
+  /* ⚠️ 넉 장이 되면서 기준을 46rem → 64rem으로 올렸다. 그 밑에서 네 장을 한 줄에 늘어놓으면
+     한 장이 180px 언저리라 기기 화면 안이 안 보인다 — 차라리 옆으로 넘겨 보는 게 낫다. */
+  @media (max-width: 64rem) {
     /* 좁은 화면에서는 옆으로 넘겨 본다 — 3장을 세로로 쌓으면 페이지가 너무 길어진다. */
     .shots {
       overflow-x: auto; scroll-snap-type: x mandatory;
@@ -127,7 +132,9 @@
       justify-content: flex-start;
       scroll-padding-inline: 1.25rem;
     }
-    .shots img { flex: none; width: 72vw; max-width: none; scroll-snap-align: center; }
+    /* 폰에서는 화면 폭에 맞추고, 태블릿 폭에서는 20rem에서 멈춘다(72vw만 쓰면 1000px
+       화면에서 한 장이 720px가 된다). */
+    .shots img { flex: none; width: min(72vw, 20rem); max-width: none; scroll-snap-align: center; }
   }
 
   /* ── 본문 섹션 ── */
@@ -205,11 +212,12 @@
     </div>
   </section>
 
-  <div class="wrap">
+  <div class="wrap wide">
     <div class="shots">
       <img src="img/ko-2.webp" alt="할 일과 습관·루틴 화면" width="720" height="1280" loading="lazy">
       <img src="img/ko-3.webp" alt="달력과 일기 화면" width="720" height="1280" loading="lazy">
       <img src="img/ko-4.webp" alt="인물 사전과 관계도 화면" width="720" height="1280" loading="lazy">
+      <img src="img/ko-5.webp" alt="메모 화면" width="720" height="1280" loading="lazy">
     </div>
   </div>
 
@@ -302,11 +310,12 @@
     </div>
   </section>
 
-  <div class="wrap">
+  <div class="wrap wide">
     <div class="shots">
       <img src="img/en-2.webp" alt="To-Do and Routines screens" width="720" height="1280" loading="lazy">
       <img src="img/en-3.webp" alt="Calendar and Journal screens" width="720" height="1280" loading="lazy">
       <img src="img/en-4.webp" alt="People directory and relation graph screens" width="720" height="1280" loading="lazy">
+      <img src="img/en-5.webp" alt="Notes screen" width="720" height="1280" loading="lazy">
     </div>
   </div>
 
@@ -399,11 +408,12 @@
     </div>
   </section>
 
-  <div class="wrap">
+  <div class="wrap wide">
     <div class="shots">
       <img src="img/ja-2.webp" alt="やることと習慣・ルーティンの画面" width="720" height="1280" loading="lazy">
       <img src="img/ja-3.webp" alt="カレンダーと日記の画面" width="720" height="1280" loading="lazy">
       <img src="img/ja-4.webp" alt="人物リストと関係図の画面" width="720" height="1280" loading="lazy">
+      <img src="img/ja-5.webp" alt="メモの画面" width="720" height="1280" loading="lazy">
     </div>
   </div>
 
