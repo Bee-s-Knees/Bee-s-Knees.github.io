@@ -89,8 +89,18 @@
     text-align: center;
     padding: 3.5rem 0 2.75rem;
   }
-  .hero img.icon { width: 108px; height: 108px; margin-bottom: 1.25rem; }
-  .hero h1 { font-size: clamp(1.75rem, 5.2vw, 2.6rem); letter-spacing: -.01em; }
+  .hero img.icon { width: 108px; height: 108px; margin-bottom: .75rem; }
+  /* ⚠️ 앱 이름을 히어로에 눈에 띄게 둔다. h1은 슬로건이라, 이게 없으면 Google OAuth
+     브랜드 인증이 "동의 화면의 앱 이름이 홈페이지의 앱 이름과 일치하지 않는다"로
+     반려한다(2026-08-18 실제로 반려됨 — docs/play-release.md "OAuth 브랜드 인증"). */
+  .hero .wordmark {
+    margin: 0 0 .5rem; font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800;
+    letter-spacing: -.02em; line-height: 1.1;
+  }
+  .hero h1 {
+    font-size: clamp(1.75rem, 5.2vw, 2.6rem); letter-spacing: -.01em;
+    font-weight: 600;
+  }
   .hero p.lead {
     max-width: 34rem; margin: 1rem auto 0; font-size: clamp(1rem, 2.6vw, 1.12rem);
   }
@@ -196,6 +206,7 @@
   <section class="hero">
     <div class="wrap">
       <img class="icon" src="img/icon.png" alt="Beesnote 앱 아이콘" width="108" height="108">
+      <p class="wordmark">Beesnote</p>
       <h1>기억하려고 애쓰지 않아도 돼요.</h1>
       <p class="lead">Beesnote는 당신의 보조기억이에요. 할 일, 습관·루틴, 메모, 일기, 달력, 그리고 챙기고 싶은 사람까지 한 앱에 담고, 전부 검색으로 다시 꺼냅니다.</p>
       <div class="stores">
@@ -295,6 +306,7 @@
   <section class="hero">
     <div class="wrap">
       <img class="icon" src="img/icon.png" alt="Beesnote app icon" width="108" height="108">
+      <p class="wordmark">Beesnote</p>
       <h1>Stop trying to remember everything.</h1>
       <p class="lead">Beesnote is your external memory — tasks, routines, notes, journal, calendar and the people you care about, in one app, all searchable.</p>
       <div class="stores">
@@ -394,6 +406,7 @@
   <section class="hero">
     <div class="wrap">
       <img class="icon" src="img/icon.png" alt="Beesnote のアプリアイコン" width="108" height="108">
+      <p class="wordmark">Beesnote</p>
       <h1>すべてを覚えておこうとしなくて大丈夫です。</h1>
       <p class="lead">Beesnoteは、あなたの外部記憶です。やること、習慣・ルーティン、メモ、日記、カレンダー、そして大切な人のことまで1つのアプリに置いて、検索で取り出せます。</p>
       <div class="stores">
