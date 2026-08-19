@@ -172,10 +172,12 @@
   }
   .pro { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 2rem 1.5rem; text-align: center; }
   .pro .price { display: inline-block; margin: .5rem 0 0; color: var(--accent); font-weight: 700; }
-  /* ⚠️ 목록을 inline-block + text-align:left 로 두지 말 것 — 카드가 가운데 정렬이라
-     글머리 기호만 한쪽으로 쏠려 제목·부제와 축이 어긋나 보인다. 표식을 빼고 각 줄을
-     카드와 같은 축에 세운다. */
-  .pro ul { margin: 1.25rem 0 0; padding: 0; list-style: none; }
+  /* ⚠️ `.band p.sub`가 `max-width:40rem; margin:0`이라 **박스가 왼쪽에 붙는다**
+     (`margin-inline:auto`는 `.band.center` 안에서만 걸린다). Pro 카드는 가운데 정렬인데
+     설명만 왼쪽으로 밀려 축이 어긋나 보였다 — 여기서 가운데로 돌려놓는다. */
+  .pro p.sub { margin-inline: auto; }
+  /* 항목은 왼쪽 끝을 서로 맞추되(읽기 쉽게), 덩어리째 가운데에 놓는다. */
+  .pro ul { display: inline-block; text-align: left; margin: 1.25rem 0 0; padding: 0; list-style: none; }
   .pro li { margin: .45rem 0; font-size: .95rem; }
 
   .closing { font-size: clamp(1.1rem, 3.4vw, 1.4rem); color: var(--ink); text-align: center; margin: 0; }
@@ -255,7 +257,7 @@
         <div class="card"><h3>검색</h3><p>앱에 담은 것을 한곳에서 찾습니다. 초성으로도 걸립니다.</p></div>
         <div class="card"><h3>알림</h3><p>정한 시각에 알립니다. 시각이 없는 일은 아침에 한 통으로 모아 보냅니다.</p></div>
         <div class="card"><h3>상단 문구</h3><p>직접 쓴 글귀가 '오늘' 맨 위에 뜹니다.</p></div>
-        <div class="card"><h3>기기 간 동기화</h3><p>여러 기기에서 같은 데이터를 씁니다. <strong>iPhone은 본인의 iCloud</strong>, <strong>Android는 본인의 Google Drive</strong>로만 오가고 개발자 서버는 거치지 않습니다. Android에서 쓰는 권한은 <code>drive.appdata</code> 하나뿐이라 <strong>이 앱이 만든 숨김 폴더만</strong> 보고 다른 Drive 파일은 보지 못합니다. 기본값은 꺼짐입니다.</p></div>
+        <div class="card"><h3>기기 간 동기화</h3><p>여러 기기에서 같은 데이터를 씁니다. iPhone은 <strong>본인의 iCloud</strong>, Android는 <strong>본인의 Google Drive</strong>를 쓰고, 이 앱 전용 공간만 봅니다. 개발자 서버는 거치지 않고 기본값은 꺼짐입니다.</p></div>
       </div>
     </div>
   </section>
@@ -355,7 +357,7 @@
         <div class="card"><h3>Search</h3><p>One search box across everything you have put in the app.</p></div>
         <div class="card"><h3>Reminders</h3><p>Alerts at the time you set. All-day things arrive as a single morning digest.</p></div>
         <div class="card"><h3>Your Phrases</h3><p>Lines you wrote yourself, at the top of the Today tab.</p></div>
-        <div class="card"><h3>Sync across devices</h3><p>Use the same data on every device. It moves only through <strong>your own iCloud</strong> on iPhone and <strong>your own Google Drive</strong> on Android — never through a server of ours. Android asks for one permission, <code>drive.appdata</code>, which reaches <strong>only the hidden folder this app created</strong> and cannot see your other Drive files. Off by default.</p></div>
+        <div class="card"><h3>Sync across devices</h3><p>Use the same data on every device — <strong>your own iCloud</strong> on iPhone, <strong>your own Google Drive</strong> on Android. Beesnote sees only its own space there, never your other files or a server of ours. Off by default.</p></div>
       </div>
     </div>
   </section>
@@ -455,7 +457,7 @@
         <div class="card"><h3>検索</h3><p>アプリに入れたものをまとめて探します。</p></div>
         <div class="card"><h3>通知</h3><p>決めた時刻に知らせます。時刻のないものは朝に1通だけまとめて届きます。</p></div>
         <div class="card"><h3>トップのフレーズ</h3><p>自分で書いた言葉が「今日」タブの一番上に出ます。</p></div>
-        <div class="card"><h3>端末間の同期</h3><p>複数の端末で同じデータを使えます。やり取りは<strong>ご自身の iCloud</strong>（iPhone）と<strong>ご自身の Google Drive</strong>（Android）だけで、開発者のサーバーは経由しません。Android で使う権限は <code>drive.appdata</code> の1つだけで、<strong>本アプリが作成した非公開フォルダ</strong>にしか届かず、他の Drive ファイルは見えません。既定はオフです。</p></div>
+        <div class="card"><h3>端末間の同期</h3><p>複数の端末で同じデータを使えます。iPhone は<strong>ご自身の iCloud</strong>、Android は<strong>ご自身の Google Drive</strong>を使い、本アプリ専用の場所しか見ません。開発者のサーバーは経由せず、既定はオフです。</p></div>
       </div>
     </div>
   </section>
