@@ -1,0 +1,210 @@
+/* BEECON 웹사이트 공용 스타일.
+   색은 앱과 같은 값: 배경 #101012(스토어 스크린샷 배경), 앰버 #FF9300(D-042 박 표시색),
+   아이콘의 회색 링 #2c2f32. 새 색을 고르지 말 것. */
+:root {
+  --bg: #101012;
+  --bg-raise: #17181b;
+  --card: #1c1e22;
+  --card-top: #23262b;
+  --line: #ffffff17;
+  --ink: #f4f1ea;
+  --ink-dim: #c9c5bd;
+  --ink-mute: #8d8a84;
+  --amber: #ff9300;
+  --amber-dim: #ff930033;
+  --ring: #2c2f32;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink-dim);
+  font: 17px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        "Apple SD Gothic Neo", "Noto Sans KR", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+        "PingFang SC", "Noto Sans SC", sans-serif;
+}
+h1, h2, h3 { color: var(--ink); line-height: 1.3; margin: 0; text-wrap: balance; }
+/* 일본어·중국어 제목이 낱말 중간에서 끊기지 않게(지원 브라우저만) */
+:lang(ja) :is(h1, h2, h3, .closing), :lang(zh) :is(h1, h2, h3, .closing) { word-break: auto-phrase; }
+a { color: var(--amber); }
+.wrap { max-width: 64rem; margin: 0 auto; padding: 0 1.25rem; }
+.wrap.narrow { max-width: 46rem; }
+
+/* ── 상단 바 ── */
+.top {
+  position: sticky; top: 0; z-index: 5;
+  background: #101012e6; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; gap: .75rem; height: 56px; }
+.brand {
+  display: flex; align-items: center; gap: .55rem; text-decoration: none; color: var(--ink);
+  font-weight: 800; letter-spacing: .14em; font-size: .95rem;
+}
+.brand img { width: 28px; height: 28px; border-radius: 7px; display: block; }
+.topnav { margin-left: auto; display: flex; align-items: center; gap: .25rem; }
+.topnav > a {
+  padding: .3rem .6rem; border-radius: 999px; font-size: .88rem; color: var(--ink-mute); text-decoration: none;
+}
+.topnav > a:hover, .topnav > a[aria-current] { color: var(--ink); background: #ffffff10; }
+@media (max-width: 34rem) { .topnav > a.opt { display: none; } }
+
+/* 언어 메뉴: JS 없이도 열리는 <details>. 항목은 ?lang= 진짜 링크다. */
+.lang { position: relative; }
+.lang summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: .35rem;
+  padding: .3rem .7rem; border-radius: 999px; font-size: .88rem; color: var(--ink);
+  border: 1px solid var(--line); background: var(--bg-raise);
+}
+.lang summary::-webkit-details-marker { display: none; }
+.lang summary svg { width: 15px; height: 15px; }
+.lang .menu {
+  position: absolute; right: 0; top: calc(100% + 6px); min-width: 10rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .35rem;
+  box-shadow: 0 12px 32px #0009;
+}
+.lang .menu a {
+  display: block; padding: .45rem .7rem; border-radius: 8px; color: var(--ink-dim);
+  text-decoration: none; font-size: .92rem;
+}
+.lang .menu a:hover { background: #ffffff10; color: var(--ink); }
+
+/* ── 히어로 ── */
+.hero {
+  background: radial-gradient(60rem 30rem at 75% 10%, #ff93001a 0%, transparent 60%), var(--bg);
+  padding: 3.5rem 0 3rem;
+}
+.hero .wrap { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2.5rem; align-items: center; }
+@media (max-width: 52rem) {
+  .hero .wrap { grid-template-columns: 1fr; text-align: center; gap: 1.75rem; }
+  .hero .beacon { order: -1; width: min(62vw, 15rem); }
+  .hero .lead { margin-inline: auto; }
+  .hero .stores { justify-content: center; }
+}
+.wordmark {
+  margin: 0 0 .9rem; color: var(--amber); font-weight: 800; letter-spacing: .22em; font-size: .95rem;
+}
+.hero h1 { font-size: clamp(2rem, 5.4vw, 3.25rem); letter-spacing: -.02em; font-weight: 750; }
+.hero .lead { max-width: 33rem; margin: 1.1rem 0 0; font-size: clamp(1.02rem, 2.4vw, 1.15rem); }
+.stores { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0 .8rem; }
+/* ⚠️ Apple 공식 배지 아트워크를 흉내 내 다시 그리지 않는다 — 글자 버튼으로 둔다. */
+.btn {
+  display: inline-flex; align-items: center; gap: .6rem; padding: .85rem 1.35rem; border-radius: 14px;
+  font-size: 1rem; font-weight: 650; text-decoration: none;
+  background: linear-gradient(180deg, #ffa526, var(--amber)); color: #1d1100;
+  box-shadow: inset 0 1px 0 #ffffff55, 0 6px 18px #ff930033;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.req { font-size: .85rem; color: var(--ink-mute); margin: 0; }
+
+/* 동심원 비콘: 120 BPM 4/4. 첫 박은 가장 바깥 링, 박마다 한 칸 안쪽(앱의 실제 표시 순서).
+   CSS 애니메이션은 장식이며 앱의 타이밍 엔진과 무관하다. */
+.beacon { position: relative; width: 100%; max-width: 22rem; aspect-ratio: 1; margin: 0 auto; }
+.beacon i {
+  position: absolute; border-radius: 50%; border: solid var(--ring);
+  inset: var(--in); border-width: var(--w);
+  animation: beat 2s linear infinite; animation-delay: var(--d);
+}
+.beacon i:nth-child(1) { --in: 0%;  --w: clamp(14px, 4.4vw, 26px); --d: 0s; }
+.beacon i:nth-child(2) { --in: 12%; --w: clamp(12px, 3.8vw, 22px); --d: .5s; }
+.beacon i:nth-child(3) { --in: 23%; --w: clamp(10px, 3.2vw, 18px); --d: 1s; }
+.beacon i:nth-child(4) { --in: 33%; --w: clamp(8px, 2.6vw, 15px);  --d: 1.5s; }
+.beacon b {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 800 clamp(2.2rem, 7vw, 3.6rem)/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--amber); font-variant-numeric: tabular-nums;
+}
+.beacon b span { position: absolute; opacity: 0; animation: num 2s steps(1) infinite; animation-delay: var(--d); }
+@keyframes beat {
+  0%   { border-color: var(--amber); box-shadow: 0 0 28px #ff930066; }
+  22%  { border-color: #ff9300aa; box-shadow: 0 0 10px #ff930022; }
+  25%, 100% { border-color: var(--ring); box-shadow: none; }
+}
+@keyframes num { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .beacon i, .beacon b span { animation: none; }
+  .beacon i:nth-child(1) { border-color: var(--amber); }
+  .beacon b span:first-child { opacity: 1; }
+}
+
+/* ── 스크린샷: 7장을 옆으로 넘겨 본다 ── */
+.shots {
+  display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: .5rem 1.25rem 1.5rem; scroll-padding-inline: 1.25rem;
+  max-width: 82rem; margin: 0 auto; scrollbar-width: thin; scrollbar-color: #ffffff30 transparent;
+}
+.shots img {
+  flex: none; width: min(68vw, 15.5rem); height: auto; display: block; scroll-snap-align: start;
+  border-radius: 16px; border: 1px solid var(--line); background: var(--bg-raise);
+}
+
+/* ── 본문 띠 ── */
+section.band { padding: 3.5rem 0; border-top: 1px solid var(--line); }
+.band h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); margin-bottom: .8rem; letter-spacing: -.01em; }
+.band p.sub { max-width: 42rem; margin: 0; }
+.center { text-align: center; }
+.center p.sub { margin-inline: auto; }
+
+/* 카드는 이펙터 페달처럼 위가 살짝 밝은 금속판 */
+.grid { display: grid; gap: 1rem; margin-top: 2rem; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 56rem) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 36rem) { .grid { grid-template-columns: 1fr; } }
+.card {
+  background: linear-gradient(180deg, var(--card-top), var(--card));
+  border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.25rem 1.3rem;
+  box-shadow: inset 0 1px 0 #ffffff0d;
+}
+.card h3 { font-size: 1.03rem; display: flex; align-items: center; gap: .55rem; }
+.card h3::before {
+  content: ""; width: 9px; height: 9px; border-radius: 50%; flex: none;
+  background: var(--amber); box-shadow: 0 0 8px var(--amber);
+}
+.card p { margin: .45rem 0 0; font-size: .95rem; }
+
+/* 무료 / Pro */
+.plans { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+@media (max-width: 44rem) { .plans { grid-template-columns: 1fr; } }
+.plan { border: 1px solid var(--line); border-radius: 18px; padding: 1.5rem 1.4rem; background: var(--bg-raise); }
+.plan.pro { border-color: #ff930066; background: linear-gradient(180deg, #ff930014, var(--bg-raise) 60%); }
+.plan h3 { font-size: 1.2rem; }
+.plan .tag { margin: .2rem 0 0; font-size: .92rem; color: var(--ink-mute); }
+.plan ul { margin: 1rem 0 0; padding: 0; list-style: none; }
+.plan li { position: relative; padding-left: 1.5em; margin: .45rem 0; font-size: .95rem; }
+.plan li::before {
+  content: ""; position: absolute; left: .2em; top: .55em; width: .55em; height: .55em;
+  border-radius: 50%; border: 2px solid var(--ink-mute);
+}
+.plan.pro li::before { border-color: var(--amber); background: var(--amber-dim); }
+.note { margin: 1.25rem 0 0; font-size: .92rem; color: var(--ink-mute); text-align: center; }
+
+.facts { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.facts li { background: #ffffff0a; border: 1px solid var(--line); border-radius: 999px; padding: .4rem .9rem; font-size: .9rem; }
+
+.closing { font-size: clamp(1.25rem, 3.6vw, 1.7rem); color: var(--ink); text-align: center; margin: 0; font-weight: 650; line-height: 1.45; }
+
+/* ── 문서 페이지(지원·개인정보) ── */
+.doc { padding-top: 3rem; padding-bottom: 3.5rem; }
+.doc h1 { font-size: clamp(1.7rem, 4.6vw, 2.3rem); letter-spacing: -.01em; }
+.doc .meta { color: var(--ink-mute); font-size: .92rem; margin: .5rem 0 0; }
+.doc h2 { font-size: 1.15rem; margin: 2.2rem 0 .4rem; }
+.doc p { margin: .5rem 0 0; }
+.doc ul { margin: .6rem 0 0; padding-left: 1.3rem; }
+.doc li { margin: .3rem 0; }
+.mail {
+  display: inline-flex; align-items: center; gap: .55rem; margin-top: .9rem;
+  font-size: 1.1rem; font-weight: 650; text-decoration: none;
+  padding: .7rem 1.1rem; border-radius: 12px; border: 1px solid #ff930066; background: #ff930012;
+}
+.mail svg { width: 20px; height: 20px; }
+.faq details { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-raise); margin-top: .6rem; }
+.faq summary { cursor: pointer; padding: .85rem 1.1rem; color: var(--ink); font-weight: 600; }
+.faq details p { margin: 0; padding: 0 1.1rem 1rem; }
+
+footer { border-top: 1px solid var(--line); padding: 2rem 0 3rem; font-size: .9rem; color: var(--ink-mute); }
+footer .row { display: contents; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: center; }
+footer a { color: var(--ink-dim); text-decoration: none; }
+footer a:hover { color: var(--amber); }
