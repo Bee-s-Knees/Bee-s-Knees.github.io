@@ -96,6 +96,10 @@ a { color: var(--amber); }
   background: linear-gradient(180deg, #ffa526, var(--amber)); color: #1d1100;
   box-shadow: inset 0 1px 0 #ffffff55, 0 6px 18px #ff930033;
 }
+.btn-secondary {
+  background: var(--bg-raise); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: none;
+}
 .btn:hover { filter: brightness(1.06); }
 .btn svg { width: 20px; height: 20px; flex: none; }
 .req { font-size: .85rem; color: var(--ink-mute); margin: 0; }
