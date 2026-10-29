@@ -93,19 +93,17 @@ a { color: var(--amber); }
 .hero h1 { font-size: clamp(2rem, 5.4vw, 3.25rem); letter-spacing: -.02em; font-weight: 750; }
 .hero .lead { max-width: 33rem; margin: 1.1rem 0 0; font-size: clamp(1.02rem, 2.4vw, 1.15rem); }
 .stores { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2rem 0 .8rem; }
-/* ⚠️ Apple 공식 배지 아트워크를 흉내 내 다시 그리지 않는다 — 글자 버튼으로 둔다. */
+/* 공식 다운로드 배지 대신 동일한 텍스트 버튼에 각 스토어 로고를 표시한다. */
 .btn {
-  display: inline-flex; align-items: center; gap: .6rem; padding: .85rem 1.35rem; border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  flex: 1 1 12rem; min-height: 56px; padding: .85rem 1.1rem; border-radius: 14px;
   font-size: 1rem; font-weight: 650; text-decoration: none;
-  background: linear-gradient(180deg, #ffa526, var(--amber)); color: #1d1100;
-  box-shadow: inset 0 1px 0 #ffffff55, 0 6px 18px #ff930033;
-}
-.btn-secondary {
   background: var(--bg-raise); color: var(--ink);
-  border: 1px solid var(--line); box-shadow: none;
+  border: 1px solid #ffffff30; box-shadow: inset 0 1px 0 #ffffff0d;
 }
-.btn:hover { filter: brightness(1.06); }
-.btn svg { width: 20px; height: 20px; flex: none; }
+.btn:hover { background: var(--card-top); border-color: #ffffff55; }
+.btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; }
+.btn svg { width: 22px; height: 22px; flex: none; }
 .req { font-size: .85rem; color: var(--ink-mute); margin: 0; }
 
 /* 동심원 비콘: 120 BPM 4/4. 첫 박은 가장 바깥 링, 박마다 한 칸 안쪽(앱의 실제 표시 순서).
