@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rainy Desk – Support</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0a0f1a;
+      color: #dce6f0;
+      min-height: 100vh;
+    }
+    header {
+      padding: 60px 24px 40px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+    header p  { margin-top: 8px; color: #7a9ab8; font-size: 1rem; }
+    header .store-links { margin-top: 16px; font-size: 0.95rem; }
+    header .store-links a { color: #5ba3d9; text-decoration: none; }
+    header .store-links a:hover { text-decoration: underline; }
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    section { margin-bottom: 48px; }
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #a8c8e8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .faq-item { margin-bottom: 24px; }
+    .faq-item dt {
+      font-weight: 600;
+      color: #dce6f0;
+      margin-bottom: 6px;
+    }
+    .faq-item dd { color: #8aadcc; line-height: 1.65; }
+    .contact-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 24px;
+      line-height: 1.7;
+    }
+    .contact-box a {
+      color: #5ba3d9;
+      text-decoration: none;
+    }
+    .contact-box a:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #3d5a72;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    footer a { color: #3d7a9a; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌧 Rainy Desk</h1>
+    <p>Ambient rain &amp; lightning app for iOS &amp; Android</p>
+    <p class="store-links">
+      <a href="https://apps.apple.com/us/app/rainy-desk/id6761187591">App Store</a>
+      &nbsp;·&nbsp;
+      <a href="https://play.google.com/store/apps/details?id=it.beesk.rainydesk">Google Play</a>
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Frequently Asked Questions</h2>
+      <dl>
+        <div class="faq-item">
+          <dt>Why doesn't the lightning flash work when my screen is off?</dt>
+          <dd>On iOS, the flash effect requires the app to be in the foreground — this is a system restriction. On Android, the flash continues in the background as long as camera permission is set to "While using the app." If you chose "Allow only this time," the flash will stop automatically when you leave the app. The rain sound always continues in the background on both platforms.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Can I listen to music at the same time?</dt>
+          <dd>Yes. Rainy Desk is designed to mix with other audio apps. Start your music first, then open Rainy Desk.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Will the rain keep playing when I lock my phone?</dt>
+          <dd>Yes. The rain audio continues in the background even with the screen locked, as long as the app is running.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>What does the sleep timer do?</dt>
+          <dd>The sleep timer automatically stops the rain (and lightning) after a set duration — 10 minutes, 30 minutes, 1 hour, 3 hours, or 10 hours. You'll receive a notification when the timer starts and when it ends.</dd>
+        </div>
+        <div class="faq-item">
+          <dt>Why does the app ask for camera permission?</dt>
+          <dd>Rainy Desk uses the camera flash (torch) to simulate lightning. No photos or videos are ever taken or stored.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <div class="contact-box">
+        Have a question or found a bug?<br />
+        Email us at <a href="mailto:sysop@beesk.it">sysop@beesk.it</a><br /><br />
+        We typically respond within 1–2 business days.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Bee's Knees &nbsp;·&nbsp; <a href="privacy.html">Privacy Policy</a>
+  </footer>
+</body>
+</html>
