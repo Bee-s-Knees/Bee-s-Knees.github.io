@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>꿀벌무릎 Bee's Knees</title>
+<meta name="description" content="꿀벌무릎(Bee's Knees)은 일상과 일을 조금 더 가볍게 만드는 앱을 만듭니다. BEECON, 꿀벌노트, Rainy Desk, Beeskit.">
+<meta name="theme-color" content="#101012">
+<meta property="og:type" content="website">
+<meta property="og:title" content="꿀벌무릎 Bee's Knees">
+<meta property="og:description" content="일상과 일을 조금 더 가볍게 만드는 앱을 만듭니다.">
+<meta property="og:url" content="https://apps.beesk.it/">
+<link rel="canonical" href="https://apps.beesk.it/">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta property="og:image" content="https://apps.beesk.it/img/logo-256.png">
+<style>
+:root {
+  --bg: #101012;
+  --card: #1c1e22;
+  --card-hover: #23262b;
+  --line: #ffffff17;
+  --ink: #f4f1ea;
+  --ink-dim: #c9c5bd;
+  --ink-mute: #8d8a84;
+  --amber: #ffb300;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink-dim);
+  font: 17px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+:lang(ko) { word-break: keep-all; overflow-wrap: anywhere; }
+h1, h2, h3 { color: var(--ink); line-height: 1.3; margin: 0; text-wrap: balance; }
+p { text-wrap: pretty; }
+a { color: var(--amber); }
+.wrap { max-width: 60rem; margin: 0 auto; padding: 0 1rem; }
+
+/* 언어: html[lang]에 맞는 블록만 보인다 */
+html[lang="ko"] [lang="en"], html[lang="en"] [lang="ko"] { display: none !important; }
+
+.top { border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; height: 56px; gap: .75rem; }
+.brand { display: flex; align-items: center; gap: .5rem; color: var(--ink); font-weight: 800; letter-spacing: .04em; text-decoration: none; }
+.brand img { width: 30px; height: 30px; display: block; }
+.brand span { color: var(--amber); }
+.langs { margin-left: auto; display: flex; gap: .25rem; }
+.langs button {
+  font: inherit; font-size: .85rem; color: var(--ink-mute); background: none;
+  border: 1px solid transparent; border-radius: 999px; padding: .2rem .7rem; cursor: pointer;
+}
+.langs button[aria-pressed="true"] { color: var(--ink); border-color: var(--line); background: #ffffff10; }
+
+.hero { padding: 4.5rem 0 3rem; }
+.hero h1 { font-size: clamp(2rem, 6vw, 3.1rem); letter-spacing: -.01em; }
+.hero h1 em { font-style: normal; color: var(--amber); }
+.hero p { max-width: 38rem; margin: 1.1rem 0 0; font-size: 1.08rem; }
+
+h2.sec { font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-mute); margin: 1rem 0 1rem; }
+.apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); gap: 1rem; padding-bottom: 3.5rem; }
+.app {
+  display: flex; flex-direction: column; gap: .8rem; padding: 1.3rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+}
+.app:hover { background: var(--card-hover); }
+.app header { display: flex; align-items: center; gap: .85rem; }
+.app header img { width: 56px; height: 56px; border-radius: 13px; flex: none; }
+.app h3 { font-size: 1.15rem; }
+.app h3 a { color: inherit; text-decoration: none; }
+.app h3 a::after { content: " →"; color: var(--ink-mute); font-weight: 400; }
+.app .tag { font-size: .85rem; color: var(--ink-mute); }
+.app p { margin: 0; font-size: .95rem; flex: 1; }
+.app .links { display: flex; flex-wrap: wrap; gap: .4rem; }
+.app .links a {
+  font-size: .8rem; text-decoration: none; color: var(--ink-dim);
+  border: 1px solid var(--line); border-radius: 999px; padding: .2rem .7rem;
+}
+.app .links a:hover { color: var(--ink); border-color: #ffffff40; }
+
+footer { border-top: 1px solid var(--line); padding: 2rem 0 3rem; font-size: .85rem; color: var(--ink-mute); }
+footer p { margin: .2rem 0; }
+</style>
+<script>
+  // ?lang=ko|en > 브라우저 언어 순으로 결정
+  (function () {
+    var q = new URLSearchParams(location.search).get('lang');
+    var l = q || ((navigator.language || 'ko').toLowerCase().startsWith('ko') ? 'ko' : 'en');
+    document.documentElement.lang = (l === 'en') ? 'en' : 'ko';
+  })();
+</script>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="img/logo-256.png" alt="">꿀벌무릎 <span>·</span> Bee's Knees</a>
+  <div class="langs">
+    <button type="button" data-set="ko">한국어</button>
+    <button type="button" data-set="en">English</button>
+  </div>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <h1 lang="ko">일상과 일을<br><em>조금 더 가볍게.</em></h1>
+    <h1 lang="en">Small apps that make<br><em>everyday life lighter.</em></h1>
+    <p lang="ko">꿀벌무릎은 직접 쓰고 싶은 앱을 만드는 작은 소프트웨어 스튜디오입니다. 아이디어를 계획으로, 계획을 실행으로 옮기는 도구부터 집중과 휴식, 음악을 돕는 앱까지 — 꼭 필요한 기능을 단정하게 담는 데 집중합니다.</p>
+    <p lang="en">Bee's Knees is a small software studio that builds the apps we want to use ourselves — from tools that turn ideas into plans and plans into action, to apps for focus, rest and music. We keep each one simple and to the point.</p>
+  </section>
+
+  <h2 class="sec"><span lang="ko">서비스</span><span lang="en">Our apps</span></h2>
+  <div class="apps">
+
+    <article class="app">
+      <header>
+        <img src="beecon/img/icon-512.png" alt="">
+        <div>
+          <h3><a href="beecon/">BEECON</a></h3>
+          <div class="tag">iOS · Android</div>
+        </div>
+      </header>
+      <p lang="ko">합주와 공연을 위한 시각 메트로놈. 박자를 크고 밝은 빛으로 보여주고, 곡마다 템포를 셋리스트 순서대로 준비해 둡니다.</p>
+      <p lang="en">A visual metronome and setlists for live performance. Every beat shows as big, bright light, with each song’s tempo ready in setlist order.</p>
+      <div class="links">
+        <a href="https://apps.apple.com/app/id6823525175">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=it.beesk.beecon">Google Play</a>
+      </div>
+    </article>
+
+    <article class="app">
+      <header>
+        <img src="beesnote/img/icon.png" alt="">
+        <div>
+          <h3><a href="beesnote/"><span lang="ko">꿀벌노트</span><span lang="en">Beesnote</span></a></h3>
+          <div class="tag">iOS · Android</div>
+        </div>
+      </header>
+      <p lang="ko">할 일, 루틴, 메모, 일기, 달력, 소중한 사람들까지 한곳에 담는 외부 기억 장치. 가입도 광고도 없이 오프라인에서 동작합니다.</p>
+      <p lang="en">Your external memory: tasks, routines, notes, journal, calendar and the people you care about, in one app. No account, no ads, works offline.</p>
+      <div class="links">
+        <a href="https://apps.apple.com/app/id6808124729">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=it.beesk.beesnote">Google Play</a>
+      </div>
+    </article>
+
+    <article class="app">
+      <header>
+        <img src="rainydesk/img/icon.png" alt="">
+        <div>
+          <h3><a href="rainydesk/">Rainy Desk</a></h3>
+          <div class="tag">iOS · Android</div>
+        </div>
+      </header>
+      <p lang="ko">비 오는 날의 감성을 언제든지. 리얼한 빗소리와 천둥, 번개 효과로 집중하고, 쉬고, 잠들 수 있게 도와줍니다.</p>
+      <p lang="en">Rainy day vibes, anytime. Realistic rain, thunder and lightning to help you relax, focus and drift off.</p>
+      <div class="links">
+        <a href="https://apps.apple.com/app/id6761187591">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=it.beesk.rainydesk">Google Play</a>
+      </div>
+    </article>
+
+    <article class="app">
+      <header>
+        <img src="img/logo-256.png" alt="" style="background:#fff8e6">
+        <div>
+          <h3><a href="https://www.beesk.it">Beeskit</a></h3>
+          <div class="tag">Web</div>
+        </div>
+      </header>
+      <p lang="ko">창의적인 아이디어를 현실로. 업무 간 관계를 방향 그래프로 관리해 우선순위와 병목을 한눈에 보여주는 팀 업무 관리 툴입니다.</p>
+      <p lang="en">Turn ideas into reality. A team work-management tool that maps tasks as a directed graph, so priorities and bottlenecks are clear at a glance.</p>
+      <div class="links">
+        <a href="https://www.beesk.it">www.beesk.it</a>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer><div class="wrap">
+  <p lang="ko">꿀벌무릎 · 대표 최윤섭 · 사업자등록번호 205-04-75763</p>
+  <p lang="en">Bee's Knees (꿀벌무릎) · CEO Yoon-seop, Choe · Business Reg. No. 205-04-75763</p>
+  <p><span lang="ko">문의</span><span lang="en">Contact</span>: <a href="mailto:sysop@beesk.it">sysop@beesk.it</a></p>
+  <p>© <span id="yr">2026</span> Bee's Knees. All rights reserved.</p>
+</div></footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  document.querySelectorAll('.langs button').forEach(function (b) {
+    var sync = function () { b.setAttribute('aria-pressed', String(document.documentElement.lang === b.dataset.set)); };
+    sync();
+    b.addEventListener('click', function () {
+      document.documentElement.lang = b.dataset.set;
+      var u = new URL(location.href); u.searchParams.set('lang', b.dataset.set); history.replaceState(null, '', u);
+      document.querySelectorAll('.langs button').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(document.documentElement.lang === x.dataset.set));
+      });
+    });
+  });
+</script>
+</body>
+</html>
